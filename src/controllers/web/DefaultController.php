@@ -1,6 +1,6 @@
 <?php
 
-namespace {{vendor}}\{{package}}\controllers\web;
+namespace demirmehmet\crypto\controllers\web;
 
 use portalium\web\Controller as WebController;
 
