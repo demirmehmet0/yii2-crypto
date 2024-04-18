@@ -1,6 +1,6 @@
 {
-	"name" : "{{vendor}}/yii2-{{package}}",
-	"description" : "{{package}} Module for Portalium (Yii2)",
+	"name" : "demirmehmet/yii2-crypto",
+	"description" : "crypto Module for Portalium (Yii2)",
 	"type" : "portalium-module",
 	"license": "MIT",
 	"homepage" : "https://portalium.dev",
@@ -9,14 +9,18 @@
 			"name" : "Uğur YILDIZ",
 			"email" : "yildiz@diginova.com.tr",
 			"homepage" : "https://uguryildiz.net"
+		},
+		{
+			"name" : "Mehmet Ali DEMİR",
+			"email" : "demirmehmet0@yahoo.com"
 		}
 	],
 	"support" : {
-		"issues" : "https://github.com/{{vendor}}/yii2-{{package}}/issues"
+		"issues" : "https://github.com/demirmehmet/yii2-crypto/issues"
 	},
 	"autoload" : {
 		"psr-4" : {
-			"{{vendor}}\\{{package}}\\" : "src/"
+			"demirmehmet\\crypto\\" : "src/"
 		}
 	}
 }

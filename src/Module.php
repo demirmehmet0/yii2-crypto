@@ -1,43 +1,37 @@
 <?php
 
-namespace {{vendor}}\{{package}};
+namespace demirmehmet\crypto;
 
 use portalium\base\Event;
-use {{vendor}}\{{package}}\components\TriggerActions;
+use demirmehmet\crypto\components\TriggerActions;
 
 class Module extends \portalium\base\Module
 {
-    public static $tablePrefix = '{{package}}_';
+    public static $tablePrefix = 'crypto_';
     
-    public static $name = '{{package}}';
+    public static $name = 'crypto';
 
-    public static $description = '{{package}} Module';
+    public static $description = 'crypto Module';
 
     public $apiRules = [
         [
             'class' => 'yii\rest\UrlRule',
             'controller' => [
-                '{{package}}/default',
+                'crypto/default',
             ]
         ],
     ];
     
     public static function moduleInit()
     {
-        self::registerTranslation('{{package}}','@{{vendor}}/{{package}}/messages',[
-            '{{package}}' => '{{package}}.php',
+        self::registerTranslation('crypto','@demirmehmet/crypto/messages',[
+            'crypto' => 'crypto.php',
         ]);
     }
 
     public static function t($message, array $params = [])
     {
-        return parent::coreT('{{package}}', $message, $params);
+        return parent::coreT('crypto', $message, $params);
     }
 
-    /* 
-        public function registerEvents()
-        {
-            Event::on($this::className(), UserModule::EVENT_USER_DELETE_BEFORE, [new TriggerActions(), 'onUserDeleteBefore']);
-        } 
-    */
 }
