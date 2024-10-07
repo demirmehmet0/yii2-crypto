@@ -263,6 +263,418 @@ class DefaultController extends WebController
         );
     }
 
+    public function actionA1()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/a1')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('a1', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('a1', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionA2()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/a2')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('a2', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('a2', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionBfi()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/bfi')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('bfi', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('bfi', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionBp()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+            'threshold' => '',
+            'depth_limit' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration', 'threshold'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/bp')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                    'threshold' => $model->threshold,
+                    'depth_limit' => $model->depth_limit,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('bp', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('bp', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionLwfwsw()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/lwfwsw')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('lwfwsw', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('lwfwsw', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionPaar1()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+            'threshold' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration', 'threshold'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/paar1')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                    'threshold' => $model->threshold,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('paar1', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('paar1', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionPaar2()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+            'threshold' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration', 'threshold'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/paar2')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('paar2', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('paar2', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionRnbp()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/rnbp')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('rnbp', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('rnbp', [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionXzlbz()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $client = new \yii\httpclient\Client();
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/xzlbz')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto');
+//            download file
+            $response = json_decode($response->content, true);
+
+            $new_file = $this->save_file($response, $file->name);
+
+            \Yii::warning($new_file, 'crypto');
+
+            return $this->render('xzlbz', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render('xzlbz', [
+                'model' => $model,
+            ]
+        );
+    }
+
     
     public function save_file($content, $filename)
     {
