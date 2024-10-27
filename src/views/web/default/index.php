@@ -1,6 +1,9 @@
 <?php
 use kartik\grid\GridView;
+use demirmehmet\crypto\Module;
 
+$this->title = Module::t('S-Box Generation');
+$this->params['breadcrumbs'][] = $this->title;
 //<!-- inputfilename (5x5_4.txt) - populationsize (40000) - mutationRatio(100) - mutationRepeat(1) - searchoption (24004) (fp-ddt-lat) - outputfilename (5x5-xxxx.txt) - fixed point -1 -->
 $form = \portalium\theme\widgets\ActiveForm::begin([
     'id' => 'form',

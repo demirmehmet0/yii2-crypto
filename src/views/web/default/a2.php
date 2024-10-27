@@ -2,9 +2,9 @@
 use \portalium\theme\widgets\GridView;
 use demirmehmet\crypto\Module;
 
-$this->title = Module::t('SBP');
+$this->title = Module::t('A2');
 $this->params['breadcrumbs'][] = $this->title;
-//<!-- inputfilename (5x5_4.txt) - populationsize (40000) - mutationRatio(100) - mutationRepeat(1) - searchoption (24004) (fp-ddt-lat) - outputfilename (5x5-xxxx.txt) - fixed point -1 -->
+
 $form = \portalium\theme\widgets\ActiveForm::begin([
     'id' => 'form',
     'method' => 'post',
@@ -31,14 +31,9 @@ echo \portalium\theme\widgets\Html::beginTag('div', ['class' => 'col-md-12']);
         ]
     ]
 ]);
+
 echo $form->field($model, 'inputfilename')->fileInput()->label('Input File');
-echo $form->field($model, 'max_time')->textInput(['maxlength' => true])->label('Max Time');
-/* chosen_param
-threshold
-depth_limit */
-echo $form->field($model, 'chosen_param')->textInput(['maxlength' => true])->label('Chosen Param');
-echo $form->field($model, 'threshold')->textInput(['maxlength' => true])->label('Threshold');
-echo $form->field($model, 'depth_limit')->textInput(['maxlength' => true])->label('Depth Limit');
+echo $form->field($model, 'max_iteration')->textInput(['maxlength' => true])->label('Max Iteration');
 
 \portalium\theme\widgets\Panel::end();
 echo \portalium\theme\widgets\Html::endTag('div');
