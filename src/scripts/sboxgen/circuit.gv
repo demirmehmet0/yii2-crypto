@@ -1,0 +1,71 @@
+// Logic Circuit
+digraph {
+	0 [label=InputGate]
+	1 [label=InputGate]
+	2 [label=InputGate]
+	3 [label=InputGate]
+	4 [label=InputGate]
+	5 [label=AndGate]
+	4 -> 5
+	3 -> 5
+	6 [label=XorGate]
+	1 -> 6
+	5 -> 6
+	7 [label=OrGate]
+	3 -> 7
+	0 -> 7
+	8 [label=XorGate]
+	6 -> 8
+	7 -> 8
+	9 [label=XorGate]
+	3 -> 9
+	2 -> 9
+	10 [label=NotGate]
+	0 -> 10
+	11 [label=OrGate]
+	10 -> 11
+	1 -> 11
+	12 [label=XorGate]
+	9 -> 12
+	11 -> 12
+	13 [label=XorGate]
+	4 -> 13
+	0 -> 13
+	14 [label=XorGate]
+	13 -> 14
+	1 -> 14
+	15 [label=OrGate]
+	14 -> 15
+	4 -> 15
+	16 [label=XorGate]
+	9 -> 16
+	15 -> 16
+	17 [label=OrGate]
+	9 -> 17
+	2 -> 17
+	18 [label=XorGate]
+	13 -> 18
+	17 -> 18
+	19 [label=AndGate]
+	12 -> 19
+	1 -> 19
+	20 [label=XorGate]
+	18 -> 20
+	19 -> 20
+	21 [label=XorGate]
+	8 -> 21
+	3 -> 21
+	22 [label=XorGate]
+	21 -> 22
+	18 -> 22
+	output_0 [label="Output 0" shape=doublecircle]
+	8 -> output_0
+	output_1 [label="Output 1" shape=doublecircle]
+	16 -> output_1
+	output_2 [label="Output 2" shape=doublecircle]
+	12 -> output_2
+	output_3 [label="Output 3" shape=doublecircle]
+	20 -> output_3
+	output_4 [label="Output 4" shape=doublecircle]
+	22 -> output_4
+}

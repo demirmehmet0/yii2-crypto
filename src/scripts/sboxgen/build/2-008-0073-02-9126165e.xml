@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gates>
+  <output bit="0" gate="8" />
+  <output bit="2" gate="12" />
+  <gate type="IN" />
+  <gate type="IN" />
+  <gate type="IN" />
+  <gate type="IN" />
+  <gate type="IN" />
+  <gate type="AND">
+    <input gate="4" />
+    <input gate="3" />
+  </gate>
+  <gate type="XOR">
+    <input gate="1" />
+    <input gate="5" />
+  </gate>
+  <gate type="OR">
+    <input gate="3" />
+    <input gate="0" />
+  </gate>
+  <gate type="XOR">
+    <input gate="6" />
+    <input gate="7" />
+  </gate>
+  <gate type="NOT">
+    <input gate="0" />
+  </gate>
+  <gate type="OR">
+    <input gate="9" />
+    <input gate="1" />
+  </gate>
+  <gate type="XOR">
+    <input gate="3" />
+    <input gate="10" />
+  </gate>
+  <gate type="XOR">
+    <input gate="11" />
+    <input gate="2" />
+  </gate>
+</gates>

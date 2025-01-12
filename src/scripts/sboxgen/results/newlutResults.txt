@@ -1,0 +1,4 @@
+Index;Cost;Depth;GateCounts;Time(ms)
+0;{'UMC 180nm': 49.65, 'TSMC 65nm': 50.5, 'Depth (GEs)': 37.5, 'Depth (Soft.)': 22.0};10;{'AND': 2, 'OR': 5, 'NOT': 2, 'XOR': 13, 'XNOR': 0, 'NAND': 0, 'NOR': 0};144.96088027954102
+1;{'UMC 180nm': 48.32, 'TSMC 65nm': 49.0, 'Depth (GEs)': 36.0, 'Depth (Soft.)': 21.0};8;{'AND': 3, 'OR': 3, 'NOT': 2, 'XOR': 13, 'XNOR': 0, 'NAND': 0, 'NOR': 0};129.32181358337402
+Total Time: 276.7171859741211

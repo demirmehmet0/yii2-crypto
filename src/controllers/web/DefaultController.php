@@ -12,13 +12,13 @@ class DefaultController extends WebController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-//        $behaviors['access']['except'] = ['index', 'download', 'analyze'];
-//        $behaviors['access']['rules'] = [
-//            [
-//                'allow' => true,
-//                'roles' => ['*'],
-//            ],
-//        ];
+        //        $behaviors['access']['except'] = ['index', 'download', 'analyze'];
+        //        $behaviors['access']['rules'] = [
+        //            [
+        //                'allow' => true,
+        //                'roles' => ['*'],
+        //            ],
+        //        ];
 
         return $behaviors;
     }
@@ -28,50 +28,46 @@ class DefaultController extends WebController
         $model = new DynamicModel([
             'inputfilename' => '',
             'max_cost' => '',
-//            'mutationRatio' => '',
-//            'mutationRepeat' => '',
-//            'searchoption' => '',
-//            'outputfilename' => '',
-//            'fixedpoint' => '',
         ]);
+
         $model->addRule(['inputfilename', 'max_cost'], 'required');
         $model->addRule(['inputfilename'], 'file');
         if ($model->load(Yii::$app->request->post())) {
-            $client = new \yii\httpclient\Client();
             $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
-            $response = $client->createRequest()
-                ->setMethod('POST')
-                ->setUrl('http://185.149.103.143:5000/sbox-gen')
-                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
-                ->setOptions([
-                    'timeout' => 60,
-                ])
-                ->setData([
-                    'filename' => $file->name,
-                    'max_cost' => $model->max_cost,
-                ])
-                ->addFile('file', $file->tempName, ['filename' => $file->name])
-                ->send();
-            \Yii::warning($response->content, 'crypto');
-            $response = json_decode($response->content, true);
-//            download file
-            $new_file = $this->save_file($response, $file->name);
-            \Yii::warning($new_file, 'crypto');
+
+            $pythonfile = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/sbox_gen.py');
+
+            $new_file = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/data') . '/' . $file->name;
+
+            file_put_contents($new_file, file_get_contents($file->tempName));
+            $command = 'python3 ' . $pythonfile . ' ' . $new_file . ' ' . $model->max_cost;
+
+            $response = shell_exec($command);
+
             $response = json_decode($response, true);
+
+//            zip file /vendor/demirmehmet/yii2-crypto/src/scripts/results/newlut
+            $zipname = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/results/' . str_replace('.txt', '', $file->name) . '.zip');
+            $folder = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/results/' . str_replace('.txt', '', $file->name));
+            exec('zip -r ' . $zipname . ' ' . $folder);
+//            copy zip file to data
+            copy($zipname, Yii::$app->basePath . '/../data/' . str_replace('.txt', '', $file->name) . '.zip');
             $dataProvider = new \yii\data\ArrayDataProvider([
                 'allModels' => $response,
                 'pagination' => false
             ]);
-            
+
             return $this->render('index', [
                 'model' => $model,
                 'response' => $response,
-                'new_file' => $file->name,
+                'new_file' => str_replace('.txt', '', $file->name) . '.zip',
                 'dataProvider' => $dataProvider,
             ]);
         }
 
-        return $this->render('index', [
+        return $this->render(
+            'index',
+            [
                 'model' => $model,
             ]
         );
@@ -86,8 +82,8 @@ class DefaultController extends WebController
         $model->addRule(['inputfilename', 'bit_num'], 'required');
         $model->addRule(['inputfilename'], 'file');
         if ($model->load(Yii::$app->request->post())) {
-            $client = new \yii\httpclient\Client();
             $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            /* $client = new \yii\httpclient\Client();
             $response = $client->createRequest()
                 ->setMethod('POST')
                 ->setUrl('http://185.149.103.143:5000/sbox-analyze')
@@ -107,51 +103,21 @@ class DefaultController extends WebController
             
             $new_file = $this->save_file($response, $file->name);
             
-            \Yii::warning($new_file, 'crypto');
+            \Yii::warning($new_file, 'crypto'); */
+            $pythonfile = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/sbox_analyze.py');
 
-        // [
-        //    {
-        //        "Sbox": "0,10,17,9,22,28,6,19,24,3,1,13,27,11,18,23,21,2,14,7,25,16,4,15,8,20,30,12,5,31,26,29",
-        //        "MaxDDT": "4",
-        //        "MaxLAT": "6",
-        //        "AlgebraicDegree": "3",
-        //        "FixedPoints": "2",
-        //        "BIBO_Pattern": "31",
-        //        "LinearBranchNumber": "2",
-        //        "DifferentialBranchNumber": "2",
-        //        "FrequencyOfDifferentialUnif": "51",
-        //        "FrequencyOfLinearity": "64",
-        //        "BCT_Uniformity": "10",
-        //        "DLCT_Uniformity": "16",
-        //        "NLM": "10",
-        //        "NLM_Percentage": "83",
-        //        "IsInvolution": "1"
-        //    },
-        //    {
-        //        "Sbox": "0,10,17,9,22,28,6,19,24,3,1,30,27,26,18,23,21,2,14,7,25,16,4,15,8,20,13,12,5,31,11,29",
-        //        "MaxDDT": "4",
-        //        "MaxLAT": "6",
-        //        "AlgebraicDegree": "3",
-        //        "FixedPoints": "2",
-        //        "BIBO_Pattern": "29",
-        //        "LinearBranchNumber": "2",
-        //        "DifferentialBranchNumber": "2",
-        //        "FrequencyOfDifferentialUnif": "51",
-        //        "FrequencyOfLinearity": "64",
-        //        "BCT_Uniformity": "10",
-        //        "DLCT_Uniformity": "16",
-        //        "NLM": "10",
-        //        "NLM_Percentage": "83",
-        //        "IsInvolution": "1"
-        //    }]
-            
-//            result convert to array for gridview
+            $new_file = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/data') . '/' . $file->name;
+
+            file_put_contents($new_file, file_get_contents($file->tempName));
+            $command = 'python3 ' . $pythonfile . ' ' . $new_file . ' ' . $model->bit_num;
+
+            $response = shell_exec($command);
             $response = json_decode($response, true);
             $dataProvider = new \yii\data\ArrayDataProvider([
                 'allModels' => $response,
                 'pagination' => false
             ]);
-            
+
             return $this->render('analyze', [
                 'model' => $model,
                 'response' => $response,
@@ -160,7 +126,59 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('analyze', [
+        return $this->render(
+            'analyze',
+            [
+                'model' => $model,
+            ]
+        );
+    }
+
+    public function actionDbBdkci()
+    {
+        $model = new DynamicModel([
+            'inputfilename' => '',
+            'max_iteration' => '',
+        ]);
+        $model->addRule(['inputfilename', 'max_iteration'], 'required');
+        $model->addRule(['inputfilename'], 'file');
+        if ($model->load(Yii::$app->request->post())) {
+            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
+            /* $client = new \yii\httpclient\Client();
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://185.149.103.143:5000/db-bdkci')
+                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
+                ->setOptions([
+                    'timeout' => 60,
+                ])
+                ->setData([
+                    'filename' => $file->name,
+                    'max_iteration' => $model->max_iteration,
+                ])
+                ->addFile('file', $file->tempName, ['filename' => $file->name])
+                ->send();
+            \Yii::warning($response->content, 'crypto'); */
+
+            $pythonfile = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/db_bdkci.py');
+
+            $new_file = Yii::getAlias('@vendor/demirmehmet/yii2-crypto/src/scripts/data/matrix') . '/' . $file->name;
+            $this->save_file(file_get_contents($file->tempName), './../../../'.$new_file);
+            $command = 'python3 ' . $pythonfile . ' ' . $new_file . ' ' . $model->max_iteration;
+            $response = shell_exec($command);
+            var_dump($response);
+            $response = json_decode($response, true);
+            var_dump($response);
+            return $this->render('db-bdkci', [
+                'model' => $model,
+                'response' => $response,
+                'new_file' => $file->name
+            ]);
+        }
+
+        return $this->render(
+            'db-bdkci',
+            [
                 'model' => $model,
             ]
         );
@@ -197,7 +215,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -212,56 +230,14 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('sbp', [
+        return $this->render(
+            'sbp',
+            [
                 'model' => $model,
             ]
         );
     }
 
-    public function actionDbBdkci()
-    {
-        $model = new DynamicModel([
-            'inputfilename' => '',
-            'max_iteration' => '',
-        ]);
-        $model->addRule(['inputfilename', 'max_iteration'], 'required');
-        $model->addRule(['inputfilename'], 'file');
-        if ($model->load(Yii::$app->request->post())) {
-            $client = new \yii\httpclient\Client();
-            $file = \yii\web\UploadedFile::getInstance($model, 'inputfilename');
-            $response = $client->createRequest()
-                ->setMethod('POST')
-                ->setUrl('http://185.149.103.143:5000/db-bdkci')
-                ->setFormat(\yii\httpclient\Client::FORMAT_JSON)
-                ->setOptions([
-                    'timeout' => 60,
-                ])
-                ->setData([
-                    'filename' => $file->name,
-                    'max_iteration' => $model->max_iteration,
-                ])
-                ->addFile('file', $file->tempName, ['filename' => $file->name])
-                ->send();
-            \Yii::warning($response->content, 'crypto');
-//            download file
-            $response = json_decode($response->content, true);
-
-            $new_file = $this->save_file($response, $file->name);
-
-            \Yii::warning($new_file, 'crypto');
-
-            return $this->render('db-bdkci', [
-                'model' => $model,
-                'response' => $response,
-                'new_file' => $file->name
-            ]);
-        }
-
-        return $this->render('db-bdkci', [
-                'model' => $model,
-            ]
-        );
-    }
 
     public function actionA1()
     {
@@ -288,7 +264,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -302,7 +278,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('a1', [
+        return $this->render(
+            'a1',
+            [
                 'model' => $model,
             ]
         );
@@ -333,7 +311,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -347,7 +325,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('a2', [
+        return $this->render(
+            'a2',
+            [
                 'model' => $model,
             ]
         );
@@ -378,7 +358,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -392,7 +372,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('bfi', [
+        return $this->render(
+            'bfi',
+            [
                 'model' => $model,
             ]
         );
@@ -427,7 +409,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -441,7 +423,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('bp', [
+        return $this->render(
+            'bp',
+            [
                 'model' => $model,
             ]
         );
@@ -472,7 +456,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -486,7 +470,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('lwfwsw', [
+        return $this->render(
+            'lwfwsw',
+            [
                 'model' => $model,
             ]
         );
@@ -519,7 +505,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -533,7 +519,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('paar1', [
+        return $this->render(
+            'paar1',
+            [
                 'model' => $model,
             ]
         );
@@ -565,7 +553,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -579,7 +567,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('paar2', [
+        return $this->render(
+            'paar2',
+            [
                 'model' => $model,
             ]
         );
@@ -610,7 +600,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -624,7 +614,9 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('rnbp', [
+        return $this->render(
+            'rnbp',
+            [
                 'model' => $model,
             ]
         );
@@ -655,7 +647,7 @@ class DefaultController extends WebController
                 ->addFile('file', $file->tempName, ['filename' => $file->name])
                 ->send();
             \Yii::warning($response->content, 'crypto');
-//            download file
+            //            download file
             $response = json_decode($response->content, true);
 
             $new_file = $this->save_file($response, $file->name);
@@ -669,13 +661,15 @@ class DefaultController extends WebController
             ]);
         }
 
-        return $this->render('xzlbz', [
+        return $this->render(
+            'xzlbz',
+            [
                 'model' => $model,
             ]
         );
     }
 
-    
+
     public function save_file($content, $filename)
     {
         $path = realpath(Yii::$app->basePath . '/../data');
@@ -683,13 +677,15 @@ class DefaultController extends WebController
         file_put_contents($new_file, $content);
         return $new_file;
     }
-    
+
     public function actionDownload($filename)
     {
         $path = realpath(Yii::$app->basePath . '/../data');
         $file = $path . '/' . $filename;
         if (file_exists($file)) {
             return Yii::$app->response->sendFile($file);
+        } else {
+            return $this->redirect(['index']);
         }
     }
 }
